@@ -27,9 +27,12 @@ const MAX_COMMENTS = 500
 const MAX_TEAM_NAME = 80
 const MAX_TEAM_MEMBERS = 100
 const PRIORITIES = ['low', 'medium', 'high'] as const
+const CATEGORIES = ['recreation', 'household', 'field', 'manual'] as const
+const DEFAULT_CATEGORY = 'recreation'
 const SCRYPT = { N: 16_384, r: 8, p: 1, keylen: 64 }
 
 type Priority = (typeof PRIORITIES)[number]
+type Category = (typeof CATEGORIES)[number]
 
 interface TaskFields {
   id: string
@@ -37,6 +40,7 @@ interface TaskFields {
   done: boolean
   due: string | null
   priority: Priority
+  category: Category
   createdAt: number
   completedAt: number | null
   subtasks: Array<{ id: string; title: string; done: boolean }>
@@ -57,6 +61,7 @@ interface TaskRow {
   done: number
   due: string | null
   priority: string
+  category: string
   created_at: number
   completed_at: number | null
   subtasks: string
@@ -150,6 +155,7 @@ db.exec(`
     done INTEGER NOT NULL DEFAULT 0,
     due TEXT,
     priority TEXT NOT NULL DEFAULT 'medium',
+    category TEXT NOT NULL DEFAULT 'recreation',
     created_at INTEGER NOT NULL,
     completed_at INTEGER,
     subtasks TEXT NOT NULL DEFAULT '[]',
@@ -169,6 +175,9 @@ const taskColumns = db.prepare('PRAGMA table_info(tasks)').all() as Array<{
 }>
 if (!taskColumns.some((column) => column.name === 'team_id')) {
   db.exec('ALTER TABLE tasks ADD COLUMN team_id TEXT REFERENCES teams(id) ON DELETE CASCADE')
+}
+if (!taskColumns.some((column) => column.name === 'category')) {
+  db.exec("ALTER TABLE tasks ADD COLUMN category TEXT NOT NULL DEFAULT 'recreation'")
 }
 db.exec('CREATE INDEX IF NOT EXISTS idx_tasks_team ON tasks(team_id, created_at)')
 
@@ -193,8 +202,8 @@ const deleteExpiredSessions = db.prepare('DELETE FROM sessions WHERE expires_at 
 
 const insertTask = db.prepare(`
   INSERT INTO tasks
-    (id, user_id, team_id, title, done, due, priority, created_at, completed_at, subtasks, comments)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (id, user_id, team_id, title, done, due, priority, category, created_at, completed_at, subtasks, comments)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `)
 const deletePersonalTasks = db.prepare(
   'DELETE FROM tasks WHERE user_id = ? AND team_id IS NULL',
@@ -221,7 +230,7 @@ const findTeamTask = db.prepare(`
 `)
 const updateTeamTask = db.prepare(`
   UPDATE tasks
-  SET title = ?, done = ?, due = ?, priority = ?, completed_at = ?, subtasks = ?, comments = ?
+  SET title = ?, done = ?, due = ?, priority = ?, category = ?, completed_at = ?, subtasks = ?, comments = ?
   WHERE id = ? AND team_id = ?
 `)
 const deleteTeamTask = db.prepare('DELETE FROM tasks WHERE id = ? AND team_id = ?')
@@ -546,6 +555,9 @@ function parseTask(value: unknown): TaskFields {
   const priority = PRIORITIES.includes(item.priority as Priority)
     ? (item.priority as Priority)
     : 'medium'
+  const category = CATEGORIES.includes(item.category as Category)
+    ? (item.category as Category)
+    : DEFAULT_CATEGORY
   const done = Boolean(item.done)
 
   return {
@@ -555,6 +567,7 @@ function parseTask(value: unknown): TaskFields {
     due:
       typeof item.due === 'string' && isValidISODate(item.due) ? item.due : null,
     priority,
+    category,
     createdAt:
       typeof item.createdAt === 'number' &&
       Number.isFinite(item.createdAt) &&
@@ -611,6 +624,9 @@ function taskFromRow(row: TaskRow): StoredTask {
     priority: PRIORITIES.includes(row.priority as Priority)
       ? (row.priority as Priority)
       : 'medium',
+    category: CATEGORIES.includes(row.category as Category)
+      ? (row.category as Category)
+      : DEFAULT_CATEGORY,
     createdAt: row.created_at,
     completedAt: row.completed_at,
     subtasks: JSON.parse(row.subtasks) as TaskFields['subtasks'],
@@ -634,6 +650,7 @@ function insertTaskRow(
     task.done ? 1 : 0,
     task.due,
     task.priority,
+    task.category,
     task.createdAt,
     task.completedAt,
     JSON.stringify(task.subtasks),
@@ -934,6 +951,7 @@ async function handleTeams(
         task.done ? 1 : 0,
         task.due,
         task.priority,
+        task.category,
         task.completedAt,
         JSON.stringify(task.subtasks),
         JSON.stringify(task.comments),

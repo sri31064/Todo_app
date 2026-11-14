@@ -1,4 +1,5 @@
 import type {
+  Category,
   Filter,
   NewTask,
   Priority,
@@ -10,9 +11,32 @@ import type {
 import { daysFromToday } from './date'
 
 export const PRIORITIES: readonly Priority[] = ['low', 'medium', 'high']
+export const CATEGORIES: readonly Category[] = [
+  'recreation',
+  'household',
+  'field',
+  'manual',
+]
+export const CATEGORY_LABELS: Record<Category, string> = {
+  recreation: 'Recreation',
+  household: 'Household work',
+  field: 'Field work',
+  manual: 'Manual work',
+}
+export const DEFAULT_CATEGORY: Category = 'recreation'
 export const MAX_TITLE_LENGTH = 200
 export const MAX_SUBTASK_LENGTH = 120
 export const MAX_COMMENT_LENGTH = 500
+
+export function parseCategory(value: unknown): Category {
+  return CATEGORIES.includes(value as Category)
+    ? (value as Category)
+    : DEFAULT_CATEGORY
+}
+
+export function categoryLabel(category: Category): string {
+  return CATEGORY_LABELS[category]
+}
 
 export interface SubtaskProgress {
   done: number
@@ -34,6 +58,7 @@ export function createTask(input: NewTask): Task {
     done: false,
     due: input.due,
     priority: input.priority,
+    category: input.category,
     createdAt: Date.now(),
     completedAt: null,
     subtasks: [],

@@ -819,6 +819,27 @@ select:focus {
   background: var(--danger-soft);
 }
 
+.chip.category--recreation {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.chip.category--household {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.chip.category--field {
+  color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.chip.category--manual {
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
 .chip.completed-chip {
   color: var(--green);
   background: var(--green-soft);
