@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react'
-import type { NewTask, Priority } from '../types'
+import type { Category, NewTask, Priority } from '../types'
+import { CATEGORIES, CATEGORY_LABELS, DEFAULT_CATEGORY } from '../lib/tasks'
 
 interface AddTaskFormProps {
   onAdd: (task: NewTask) => void
@@ -9,6 +10,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
   const [title, setTitle] = useState('')
   const [due, setDue] = useState('')
   const [priority, setPriority] = useState<Priority>('medium')
+  const [category, setCategory] = useState<Category>(DEFAULT_CATEGORY)
   const titleRef = useRef<HTMLInputElement>(null)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -20,10 +22,11 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
       return
     }
 
-    onAdd({ title: trimmed, due: due || null, priority })
+    onAdd({ title: trimmed, due: due || null, priority, category })
     setTitle('')
     setDue('')
     setPriority('medium')
+    setCategory(DEFAULT_CATEGORY)
     titleRef.current?.focus()
   }
 
@@ -73,6 +76,21 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
+          </select>
+        </label>
+        <label className="opt">
+          <span>Category</span>
+          <select
+            id="new-category"
+            aria-label="Category"
+            value={category}
+            onChange={(event) => setCategory(event.target.value as Category)}
+          >
+            {CATEGORIES.map((option) => (
+              <option key={option} value={option}>
+                {CATEGORY_LABELS[option]}
+              </option>
+            ))}
           </select>
         </label>
       </div>

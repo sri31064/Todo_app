@@ -1,4 +1,5 @@
 export type Priority = 'low' | 'medium' | 'high'
+export type Category = 'recreation' | 'household' | 'field' | 'manual'
 export type Filter = 'all' | 'pending' | 'overdue' | 'done'
 
 export interface Subtask {
@@ -19,6 +20,7 @@ export interface Task {
   done: boolean
   due: string | null
   priority: Priority
+  category: Category
   createdAt: number
   completedAt: number | null
   subtasks: Subtask[]
@@ -35,6 +37,7 @@ export interface NewTask {
   title: string
   due: string | null
   priority: Priority
+  category: Category
 }
 
 export type TaskCounts = Record<Filter, number>

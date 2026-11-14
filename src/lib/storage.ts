@@ -5,6 +5,7 @@ import {
   MAX_COMMENT_LENGTH,
   MAX_SUBTASK_LENGTH,
   MAX_TITLE_LENGTH,
+  parseCategory,
   PRIORITIES,
 } from './tasks'
 
@@ -70,6 +71,7 @@ function toTask(value: unknown): Task | null {
     done: Boolean(item.done),
     due: isISODate(item.due) ? item.due : null,
     priority: parsePriority(item.priority),
+    category: parseCategory(item.category),
     createdAt:
       typeof item.createdAt === 'number' && Number.isFinite(item.createdAt)
         ? item.createdAt

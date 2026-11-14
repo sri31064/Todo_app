@@ -125,13 +125,13 @@ JSON bodies use `{ "email", "password" }` for auth, `{ "tasks": [...] }` for per
 - Shared **team tasks** that any member can add, edit, complete, or delete
 - Read-only **People's tasks** view for monitoring teammates' personal progress
 - Host controls for renaming a team, managing members and invites, and deleting the team
-- Add tasks with an optional **deadline** and Low / Medium / High priority
+- Add tasks with an optional **deadline**, Low / Medium / High priority, and a category (Recreation, Household work, Field work, or Manual work)
 - Smart deadline labels: “Due today”, “Due in 3 days”, or “Overdue by 2 days”
 - Break a task into **checklist parts** with automatic progress (count, percent, and bar)
 - Log timestamped **progress notes** on each task, with undo when deleting notes or parts
 - Complete, edit in place (double-click a title), and delete with undo
 - Filter by **All / Pending / Overdue / Completed**, with live counts and instant search
-- Completed tasks keep their full history: deadline, priority, added/completed times, parts, and notes
+- Completed tasks keep their full history: deadline, priority, category, added/completed times, parts, and notes
 - Open any task — including completed ones — to see every detail and keep editing its parts or notes
 - Clear completed tasks in bulk, with undo
 - Light theme throughout, with no dark-mode switch
