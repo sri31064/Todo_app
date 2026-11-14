@@ -76,7 +76,7 @@ npm start
 - The client saves personal changes with a 250 ms debounce and serializes requests, sending the current personal list to `PUT /api/tasks`. This endpoint only replaces personal tasks, so it can never overwrite shared team tasks.
 - Team tasks use per-task `POST` / `PATCH` / `DELETE` requests, with one serialized save queue per task, so one teammate's edit cannot replace the whole shared list.
 - If a save fails, a banner appears with **Retry**. A `401` means the session expired, so the app returns to the sign-in screen.
-- The theme preference stays in `localStorage`; auth state stays on the server.
+- Auth state stays on the server; nothing except legacy task data is kept in `localStorage`.
 
 ### Existing local tasks
 
@@ -134,7 +134,7 @@ JSON bodies use `{ "email", "password" }` for auth, `{ "tasks": [...] }` for per
 - Completed tasks keep their full history: deadline, priority, added/completed times, parts, and notes
 - Open any task — including completed ones — to see every detail and keep editing its parts or notes
 - Clear completed tasks in bulk, with undo
-- Light / dark theme that follows your system preference
+- Light theme throughout, with no dark-mode switch
 - Responsive layout and keyboard-friendly controls (`/` focuses search)
 - Session survives page reloads; signing out hides all tasks immediately
 
@@ -151,8 +151,8 @@ src/
     TeamDialogs           Create/manage team, invites, rename, delete, leave
     Header, AddTaskForm, Toolbar, TaskList, TaskItem
     TaskDetails           Per-task parts and progress notes
-    EmptyState, Toast, ThemeToggle, icons
-  hooks/                  useTheme, useToast
+    EmptyState, Toast, icons
+  hooks/                  useToast
   lib/
     api.ts                Typed client for auth, personal tasks, and teams
     date.ts               Date helpers

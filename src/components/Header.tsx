@@ -1,24 +1,13 @@
-import type { Theme } from '../types'
 import { LogOutIcon, UserIcon } from './icons'
-import { ThemeToggle } from './ThemeToggle'
 
 interface HeaderProps {
   title: string
   subtitle: string
   email: string
-  theme: Theme
-  onToggleTheme: () => void
   onSignOut: () => void
 }
 
-export function Header({
-  title,
-  subtitle,
-  email,
-  theme,
-  onToggleTheme,
-  onSignOut,
-}: HeaderProps) {
+export function Header({ title, subtitle, email, onSignOut }: HeaderProps) {
   return (
     <header className="app-header">
       <div>
@@ -30,7 +19,6 @@ export function Header({
           <UserIcon />
           <span className="user-email">{email}</span>
         </span>
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         <button
           type="button"
           className="icon-btn"

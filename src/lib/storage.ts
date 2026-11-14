@@ -9,7 +9,6 @@ import {
 } from './tasks'
 
 export const LEGACY_STORAGE_KEY = 'todo-app-v1'
-const THEME_KEY = 'todo-theme'
 
 export interface LegacyScan {
   origin: string
@@ -145,7 +144,7 @@ export function scanLegacyTasks(): LegacyScan {
   try {
     for (let index = 0; index < localStorage.length; index += 1) {
       const key = localStorage.key(index)
-      if (!key || key === THEME_KEY) continue
+      if (!key) continue
 
       const raw = localStorage.getItem(key)
       if (!raw) continue

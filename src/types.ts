@@ -1,6 +1,5 @@
 export type Priority = 'low' | 'medium' | 'high'
 export type Filter = 'all' | 'pending' | 'overdue' | 'done'
-export type Theme = 'light' | 'dark'
 
 export interface Subtask {
   id: string

@@ -1,17 +1,13 @@
 import { useState, type FormEvent } from 'react'
-import type { Theme } from '../types'
 import { CheckCircleIcon } from './icons'
-import { ThemeToggle } from './ThemeToggle'
 
 export type AuthMode = 'signin' | 'signup'
 
 interface AuthScreenProps {
-  theme: Theme
   busy: boolean
   error: string | null
   onSubmit: (mode: AuthMode, email: string, password: string) => void
   onClearError: () => void
-  onToggleTheme: () => void
 }
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -26,14 +22,7 @@ function validate(mode: AuthMode, email: string, password: string): string | nul
   return null
 }
 
-export function AuthScreen({
-  theme,
-  busy,
-  error,
-  onSubmit,
-  onClearError,
-  onToggleTheme,
-}: AuthScreenProps) {
+export function AuthScreen({ busy, error, onSubmit, onClearError }: AuthScreenProps) {
   const [mode, setMode] = useState<AuthMode>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -82,7 +71,6 @@ export function AuthScreen({
               <h1 id="auth-title">{isSignup ? 'Create your account' : 'Welcome back'}</h1>
             </div>
           </div>
-          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
 
         <p className="auth-sub">

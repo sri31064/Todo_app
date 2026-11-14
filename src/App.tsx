@@ -12,7 +12,6 @@ import {
 import { TaskList } from './components/TaskList'
 import { Toast } from './components/Toast'
 import { Toolbar } from './components/Toolbar'
-import { useTheme } from './hooks/useTheme'
 import { useToast } from './hooks/useToast'
 import {
   ApiError,
@@ -102,7 +101,6 @@ export default function App() {
   const [dialogBusy, setDialogBusy] = useState(false)
   const [dialogError, setDialogError] = useState<string | null>(null)
 
-  const { theme, toggleTheme } = useTheme()
   const { toast, show: showToast, hide: hideToast } = useToast()
 
   const saveTimerRef = useRef<number | null>(null)
@@ -1215,12 +1213,10 @@ export default function App() {
   if (!user) {
     return (
       <AuthScreen
-        theme={theme}
         busy={authBusy}
         error={authError}
         onSubmit={handleAuth}
         onClearError={() => setAuthError(null)}
-        onToggleTheme={toggleTheme}
       />
     )
   }
@@ -1258,8 +1254,6 @@ export default function App() {
           title={title}
           subtitle={subtitle}
           email={user.email}
-          theme={theme}
-          onToggleTheme={toggleTheme}
           onSignOut={handleSignOut}
         />
 
