@@ -1,6 +1,13 @@
 import { useRef, useState, type FormEvent } from 'react'
-import type { Category, NewTask, Priority } from '../types'
-import { CATEGORIES, CATEGORY_LABELS, DEFAULT_CATEGORY } from '../lib/tasks'
+import type { Category, NewTask, Priority, Subcategory } from '../types'
+import {
+  CATEGORIES,
+  CATEGORY_LABELS,
+  DEFAULT_CATEGORY,
+  DEFAULT_SUBCATEGORY,
+  SUBCATEGORIES,
+  SUBCATEGORY_LABELS,
+} from '../lib/tasks'
 
 interface AddTaskFormProps {
   onAdd: (task: NewTask) => void
@@ -11,6 +18,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
   const [due, setDue] = useState('')
   const [priority, setPriority] = useState<Priority>('medium')
   const [category, setCategory] = useState<Category>(DEFAULT_CATEGORY)
+  const [subcategory, setSubcategory] = useState<Subcategory>(DEFAULT_SUBCATEGORY)
   const titleRef = useRef<HTMLInputElement>(null)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -22,11 +30,12 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
       return
     }
 
-    onAdd({ title: trimmed, due: due || null, priority, category })
+    onAdd({ title: trimmed, due: due || null, priority, category, subcategory })
     setTitle('')
     setDue('')
     setPriority('medium')
     setCategory(DEFAULT_CATEGORY)
+    setSubcategory(DEFAULT_SUBCATEGORY)
     titleRef.current?.focus()
   }
 
@@ -89,6 +98,21 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
             {CATEGORIES.map((option) => (
               <option key={option} value={option}>
                 {CATEGORY_LABELS[option]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="opt">
+          <span>Sub category</span>
+          <select
+            id="new-subcategory"
+            aria-label="Sub category"
+            value={subcategory}
+            onChange={(event) => setSubcategory(event.target.value as Subcategory)}
+          >
+            {SUBCATEGORIES.map((option) => (
+              <option key={option} value={option}>
+                {SUBCATEGORY_LABELS[option]}
               </option>
             ))}
           </select>

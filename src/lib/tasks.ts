@@ -3,6 +3,7 @@ import type {
   Filter,
   NewTask,
   Priority,
+  Subcategory,
   Subtask,
   Task,
   TaskComment,
@@ -24,6 +25,13 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   manual: 'Manual work',
 }
 export const DEFAULT_CATEGORY: Category = 'recreation'
+export const SUBCATEGORIES: readonly Subcategory[] = ['level1', 'level2', 'level3']
+export const SUBCATEGORY_LABELS: Record<Subcategory, string> = {
+  level1: 'Level 1',
+  level2: 'Level 2',
+  level3: 'Level 3',
+}
+export const DEFAULT_SUBCATEGORY: Subcategory = 'level1'
 export const MAX_TITLE_LENGTH = 200
 export const MAX_SUBTASK_LENGTH = 120
 export const MAX_COMMENT_LENGTH = 500
@@ -36,6 +44,16 @@ export function parseCategory(value: unknown): Category {
 
 export function categoryLabel(category: Category): string {
   return CATEGORY_LABELS[category]
+}
+
+export function parseSubcategory(value: unknown): Subcategory {
+  return SUBCATEGORIES.includes(value as Subcategory)
+    ? (value as Subcategory)
+    : DEFAULT_SUBCATEGORY
+}
+
+export function subcategoryLabel(subcategory: Subcategory): string {
+  return SUBCATEGORY_LABELS[subcategory]
 }
 
 export interface SubtaskProgress {
@@ -59,6 +77,7 @@ export function createTask(input: NewTask): Task {
     due: input.due,
     priority: input.priority,
     category: input.category,
+    subcategory: input.subcategory,
     createdAt: Date.now(),
     completedAt: null,
     subtasks: [],

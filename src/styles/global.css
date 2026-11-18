@@ -840,6 +840,21 @@ select:focus {
   border: 1px solid var(--border);
 }
 
+.chip.subcategory {
+  color: var(--muted);
+  background: transparent;
+  border: 1px dashed var(--border);
+}
+
+.chip.subcategory--level2 {
+  border-color: var(--border-strong);
+}
+
+.chip.subcategory--level3 {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
 .chip.completed-chip {
   color: var(--green);
   background: var(--green-soft);
