@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { describeDue, formatTimestamp } from '../lib/date'
-import { capitalizePriority, categoryLabel, getSubtaskProgress } from '../lib/tasks'
+import { capitalizePriority, categoryLabel, getSubtaskProgress, subcategoryLabel } from '../lib/tasks'
 import type { Task } from '../types'
 import { ChevronDownIcon, PencilIcon, TrashIcon } from './icons'
 import { ProgressBar } from './ProgressBar'
@@ -132,6 +132,9 @@ export function TaskItem({
             </span>
             <span className={`chip category category--${task.category}`}>
               {categoryLabel(task.category)}
+            </span>
+            <span className={`chip subcategory subcategory--${task.subcategory}`}>
+              {subcategoryLabel(task.subcategory)}
             </span>
             {showAuthor && task.ownerEmail && (
               <span className="chip author-chip" title={`Added by ${task.ownerEmail}`}>

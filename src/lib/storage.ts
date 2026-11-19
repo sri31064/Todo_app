@@ -6,6 +6,7 @@ import {
   MAX_SUBTASK_LENGTH,
   MAX_TITLE_LENGTH,
   parseCategory,
+  parseSubcategory,
   PRIORITIES,
 } from './tasks'
 
@@ -72,6 +73,7 @@ function toTask(value: unknown): Task | null {
     due: isISODate(item.due) ? item.due : null,
     priority: parsePriority(item.priority),
     category: parseCategory(item.category),
+    subcategory: parseSubcategory(item.subcategory),
     createdAt:
       typeof item.createdAt === 'number' && Number.isFinite(item.createdAt)
         ? item.createdAt
