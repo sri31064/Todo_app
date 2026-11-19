@@ -855,6 +855,12 @@ select:focus {
   border-color: var(--border-strong);
 }
 
+.chip.subcategory--level4 {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+}
+
 .chip.completed-chip {
   color: var(--green);
   background: var(--green-soft);

@@ -1,6 +1,6 @@
 export type Priority = 'low' | 'medium' | 'high'
 export type Category = 'recreation' | 'household' | 'field' | 'manual'
-export type Subcategory = 'level1' | 'level2' | 'level3'
+export type Subcategory = 'level1' | 'level2' | 'level3' | 'level4'
 export type Filter = 'all' | 'pending' | 'overdue' | 'done'
 
 export interface Subtask {

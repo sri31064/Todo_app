@@ -25,11 +25,17 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   manual: 'Manual work',
 }
 export const DEFAULT_CATEGORY: Category = 'recreation'
-export const SUBCATEGORIES: readonly Subcategory[] = ['level1', 'level2', 'level3']
+export const SUBCATEGORIES: readonly Subcategory[] = [
+  'level1',
+  'level2',
+  'level3',
+  'level4',
+]
 export const SUBCATEGORY_LABELS: Record<Subcategory, string> = {
   level1: 'Level 1',
   level2: 'Level 2',
   level3: 'Level 3',
+  level4: 'Level 4',
 }
 export const DEFAULT_SUBCATEGORY: Subcategory = 'level1'
 export const MAX_TITLE_LENGTH = 200

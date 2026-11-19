@@ -29,7 +29,7 @@ const MAX_TEAM_MEMBERS = 100
 const PRIORITIES = ['low', 'medium', 'high'] as const
 const CATEGORIES = ['recreation', 'household', 'field', 'manual'] as const
 const DEFAULT_CATEGORY = 'recreation'
-const SUBCATEGORIES = ['level1', 'level2', 'level3'] as const
+const SUBCATEGORIES = ['level1', 'level2', 'level3', 'level4'] as const
 const DEFAULT_SUBCATEGORY = 'level1'
 const SCRYPT = { N: 16_384, r: 8, p: 1, keylen: 64 }
 

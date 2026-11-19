@@ -125,7 +125,7 @@ JSON bodies use `{ "email", "password" }` for auth, `{ "tasks": [...] }` for per
 - Shared **team tasks** that any member can add, edit, complete, or delete
 - Read-only **People's tasks** view for monitoring teammates' personal progress
 - Host controls for renaming a team, managing members and invites, and deleting the team
-- Add tasks with an optional **deadline**, Low / Medium / High priority, a category (Recreation, Household work, Field work, or Manual work), and a sub category (Level 1, Level 2, or Level 3)
+- Add tasks with an optional **deadline**, Low / Medium / High priority, a category (Recreation, Household work, Field work, or Manual work), and a sub category (Level 1, Level 2, Level 3, or Level 4)
 - Smart deadline labels: “Due today”, “Due in 3 days”, or “Overdue by 2 days”
 - Break a task into **checklist parts** with automatic progress (count, percent, and bar)
 - Log timestamped **progress notes** on each task, with undo when deleting notes or parts
