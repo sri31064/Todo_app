@@ -1,11 +1,15 @@
 import { useState, type FormEvent } from 'react'
+import type { Theme } from '../hooks/useTheme'
 import { CheckCircleIcon } from './icons'
+import { ThemeToggle } from './ThemeToggle'
 
 export type AuthMode = 'signin' | 'signup'
 
 interface AuthScreenProps {
   busy: boolean
   error: string | null
+  theme: Theme
+  onToggleTheme: () => void
   onSubmit: (mode: AuthMode, email: string, password: string) => void
   onClearError: () => void
 }
@@ -22,7 +26,14 @@ function validate(mode: AuthMode, email: string, password: string): string | nul
   return null
 }
 
-export function AuthScreen({ busy, error, onSubmit, onClearError }: AuthScreenProps) {
+export function AuthScreen({
+  busy,
+  error,
+  theme,
+  onToggleTheme,
+  onSubmit,
+  onClearError,
+}: AuthScreenProps) {
   const [mode, setMode] = useState<AuthMode>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -71,6 +82,7 @@ export function AuthScreen({ busy, error, onSubmit, onClearError }: AuthScreenPr
               <h1 id="auth-title">{isSignup ? 'Create your account' : 'Welcome back'}</h1>
             </div>
           </div>
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
 
         <p className="auth-sub">
@@ -163,10 +175,20 @@ export function AuthScreen({ busy, error, onSubmit, onClearError }: AuthScreenPr
   )
 }
 
-export function AuthLoading() {
+interface AuthLoadingProps {
+  theme: Theme
+  onToggleTheme: () => void
+}
+
+export function AuthLoading({ theme, onToggleTheme }: AuthLoadingProps) {
   return (
     <main className="auth-shell">
       <section className="auth-card auth-loading" aria-live="polite">
+        <ThemeToggle
+          theme={theme}
+          onToggle={onToggleTheme}
+          className="auth-loading-toggle"
+        />
         <span className="spinner" aria-hidden="true" />
         <p>Loading your tasks…</p>
       </section>

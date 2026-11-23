@@ -134,7 +134,7 @@ JSON bodies use `{ "email", "password" }` for auth, `{ "tasks": [...] }` for per
 - Completed tasks keep their full history: deadline, priority, category, sub category, added/completed times, parts, and notes
 - Open any task — including completed ones — to see every detail and keep editing its parts or notes
 - Clear completed tasks in bulk, with undo
-- Light theme throughout, with no dark-mode switch
+- Light and dark themes with a toggle in the header and on the sign-in screen; your choice is remembered in `localStorage` (`taskspace-theme`), and until you choose, the OS colour scheme is followed
 - Responsive layout and keyboard-friendly controls (`/` focuses search)
 - Session survives page reloads; signing out hides all tasks immediately
 
@@ -152,7 +152,7 @@ src/
     Header, AddTaskForm, Toolbar, TaskList, TaskItem
     TaskDetails           Per-task parts and progress notes
     EmptyState, Toast, icons
-  hooks/                  useToast
+  hooks/                  useToast, useTheme (light/dark preference)
   lib/
     api.ts                Typed client for auth, personal tasks, and teams
     date.ts               Date helpers

@@ -12,6 +12,7 @@ import {
 import { TaskList } from './components/TaskList'
 import { Toast } from './components/Toast'
 import { Toolbar } from './components/Toolbar'
+import { useTheme } from './hooks/useTheme'
 import { useToast } from './hooks/useToast'
 import {
   ApiError,
@@ -102,6 +103,7 @@ export default function App() {
   const [dialogError, setDialogError] = useState<string | null>(null)
 
   const { toast, show: showToast, hide: hideToast } = useToast()
+  const { theme, toggleTheme } = useTheme()
 
   const saveTimerRef = useRef<number | null>(null)
   const saveChainRef = useRef<Promise<void>>(Promise.resolve())
@@ -1208,13 +1210,17 @@ export default function App() {
     action?.()
   }
 
-  if (authLoading) return <AuthLoading />
+  if (authLoading) {
+    return <AuthLoading theme={theme} onToggleTheme={toggleTheme} />
+  }
 
   if (!user) {
     return (
       <AuthScreen
         busy={authBusy}
         error={authError}
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onSubmit={handleAuth}
         onClearError={() => setAuthError(null)}
       />
@@ -1254,6 +1260,8 @@ export default function App() {
           title={title}
           subtitle={subtitle}
           email={user.email}
+          theme={theme}
+          onToggleTheme={toggleTheme}
           onSignOut={handleSignOut}
         />
 

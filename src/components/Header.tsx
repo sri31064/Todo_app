@@ -1,13 +1,24 @@
+import type { Theme } from '../hooks/useTheme'
 import { LogOutIcon, UserIcon } from './icons'
+import { ThemeToggle } from './ThemeToggle'
 
 interface HeaderProps {
   title: string
   subtitle: string
   email: string
+  theme: Theme
+  onToggleTheme: () => void
   onSignOut: () => void
 }
 
-export function Header({ title, subtitle, email, onSignOut }: HeaderProps) {
+export function Header({
+  title,
+  subtitle,
+  email,
+  theme,
+  onToggleTheme,
+  onSignOut,
+}: HeaderProps) {
   return (
     <header className="app-header">
       <div>
@@ -15,6 +26,7 @@ export function Header({ title, subtitle, email, onSignOut }: HeaderProps) {
         <p className="subtitle">{subtitle}</p>
       </div>
       <div className="header-actions">
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         <span className="user-chip" title={email} aria-label={`Signed in as ${email}`}>
           <UserIcon />
           <span className="user-email">{email}</span>

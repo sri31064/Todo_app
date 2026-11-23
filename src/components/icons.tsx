@@ -124,3 +124,27 @@ export function ShieldIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function MoonIcon(props: IconProps) {
+  return (
+    <svg {...shared} {...props}>
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+    </svg>
+  )
+}
+
+export function SunIcon(props: IconProps) {
+  return (
+    <svg {...shared} {...props}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2" />
+      <path d="M12 20v2" />
+      <path d="m4.93 4.93 1.42 1.42" />
+      <path d="m17.65 17.65 1.42 1.42" />
+      <path d="M2 12h2" />
+      <path d="M20 12h2" />
+      <path d="m4.93 19.07 1.42-1.42" />
+      <path d="m17.65 6.35 1.42-1.42" />
+    </svg>
+  )
+}
