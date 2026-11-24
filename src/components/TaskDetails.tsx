@@ -85,6 +85,12 @@ export function TaskDetails({
                 : 'Pending'}
           </span>
         </div>
+        {task.completionReason && (
+          <div className="details-fact details-fact-reason">
+            <span className="details-label">Reason for delay or early completion</span>
+            <span className="details-value">{task.completionReason}</span>
+          </div>
+        )}
       </div>
 
       <section aria-labelledby={`${id}-parts-title`}>

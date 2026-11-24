@@ -3,6 +3,7 @@ import { isISODate } from './date'
 import {
   createId,
   MAX_COMMENT_LENGTH,
+  MAX_COMPLETION_REASON_LENGTH,
   MAX_SUBTASK_LENGTH,
   MAX_TITLE_LENGTH,
   parseCategory,
@@ -81,6 +82,10 @@ function toTask(value: unknown): Task | null {
     completedAt:
       typeof item.completedAt === 'number' && Number.isFinite(item.completedAt)
         ? item.completedAt
+        : null,
+    completionReason:
+      typeof item.completionReason === 'string'
+        ? item.completionReason.trim().slice(0, MAX_COMPLETION_REASON_LENGTH) || null
         : null,
     subtasks: Array.isArray(item.subtasks)
       ? item.subtasks.map(toSubtask).filter((subtask): subtask is Subtask => subtask !== null)

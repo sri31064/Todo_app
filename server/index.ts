@@ -22,6 +22,7 @@ const MAX_TASKS = 1000
 const MAX_TITLE_LENGTH = 200
 const MAX_SUBTASK_LENGTH = 120
 const MAX_COMMENT_LENGTH = 500
+const MAX_COMPLETION_REASON_LENGTH = 500
 const MAX_SUBTASKS = 200
 const MAX_COMMENTS = 500
 const MAX_TEAM_NAME = 80
@@ -47,6 +48,7 @@ interface TaskFields {
   subcategory: Subcategory
   createdAt: number
   completedAt: number | null
+  completionReason: string | null
   subtasks: Array<{ id: string; title: string; done: boolean }>
   comments: Array<{ id: string; text: string; createdAt: number }>
 }
@@ -69,6 +71,7 @@ interface TaskRow {
   subcategory: string
   created_at: number
   completed_at: number | null
+  completion_reason: string | null
   subtasks: string
   comments: string
   owner_email: string
@@ -164,6 +167,7 @@ db.exec(`
     subcategory TEXT NOT NULL DEFAULT 'level1',
     created_at INTEGER NOT NULL,
     completed_at INTEGER,
+    completion_reason TEXT,
     subtasks TEXT NOT NULL DEFAULT '[]',
     comments TEXT NOT NULL DEFAULT '[]'
   );
@@ -188,6 +192,9 @@ if (!taskColumns.some((column) => column.name === 'category')) {
 if (!taskColumns.some((column) => column.name === 'subcategory')) {
   db.exec("ALTER TABLE tasks ADD COLUMN subcategory TEXT NOT NULL DEFAULT 'level1'")
 }
+if (!taskColumns.some((column) => column.name === 'completion_reason')) {
+  db.exec('ALTER TABLE tasks ADD COLUMN completion_reason TEXT')
+}
 db.exec('CREATE INDEX IF NOT EXISTS idx_tasks_team ON tasks(team_id, created_at)')
 
 const insertUser = db.prepare(
@@ -211,8 +218,8 @@ const deleteExpiredSessions = db.prepare('DELETE FROM sessions WHERE expires_at 
 
 const insertTask = db.prepare(`
   INSERT INTO tasks
-    (id, user_id, team_id, title, done, due, priority, category, subcategory, created_at, completed_at, subtasks, comments)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (id, user_id, team_id, title, done, due, priority, category, subcategory, created_at, completed_at, completion_reason, subtasks, comments)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `)
 const deletePersonalTasks = db.prepare(
   'DELETE FROM tasks WHERE user_id = ? AND team_id IS NULL',
@@ -239,7 +246,7 @@ const findTeamTask = db.prepare(`
 `)
 const updateTeamTask = db.prepare(`
   UPDATE tasks
-  SET title = ?, done = ?, due = ?, priority = ?, category = ?, subcategory = ?, completed_at = ?, subtasks = ?, comments = ?
+  SET title = ?, done = ?, due = ?, priority = ?, category = ?, subcategory = ?, completed_at = ?, completion_reason = ?, subtasks = ?, comments = ?
   WHERE id = ? AND team_id = ?
 `)
 const deleteTeamTask = db.prepare('DELETE FROM tasks WHERE id = ? AND team_id = ?')
@@ -594,6 +601,10 @@ function parseTask(value: unknown): TaskFields {
       item.completedAt > 0
         ? item.completedAt
         : null,
+    completionReason:
+      typeof item.completionReason === 'string'
+        ? item.completionReason.trim().slice(0, MAX_COMPLETION_REASON_LENGTH) || null
+        : null,
     subtasks: Array.isArray(item.subtasks)
       ? item.subtasks
           .slice(0, MAX_SUBTASKS)
@@ -645,6 +656,7 @@ function taskFromRow(row: TaskRow): StoredTask {
       : DEFAULT_SUBCATEGORY,
     createdAt: row.created_at,
     completedAt: row.completed_at,
+    completionReason: row.completion_reason,
     subtasks: JSON.parse(row.subtasks) as TaskFields['subtasks'],
     comments: JSON.parse(row.comments) as TaskFields['comments'],
     teamId: row.team_id,
@@ -670,6 +682,7 @@ function insertTaskRow(
     task.subcategory,
     task.createdAt,
     task.completedAt,
+    task.completionReason,
     JSON.stringify(task.subtasks),
     JSON.stringify(task.comments),
   )
@@ -971,6 +984,7 @@ async function handleTeams(
         task.category,
         task.subcategory,
         task.completedAt,
+        task.completionReason,
         JSON.stringify(task.subtasks),
         JSON.stringify(task.comments),
         taskId,

@@ -9,7 +9,7 @@ import type {
   TaskComment,
   TaskCounts,
 } from '../types'
-import { daysFromToday } from './date'
+import { daysFromToday, isoDate, parseISODate } from './date'
 
 export const PRIORITIES: readonly Priority[] = ['low', 'medium', 'high']
 export const CATEGORIES: readonly Category[] = [
@@ -35,6 +35,7 @@ export const DEFAULT_SUBCATEGORY: Subcategory = 'level1'
 export const MAX_TITLE_LENGTH = 200
 export const MAX_SUBTASK_LENGTH = 120
 export const MAX_COMMENT_LENGTH = 500
+export const MAX_COMPLETION_REASON_LENGTH = 500
 
 export function parseCategory(value: unknown): Category {
   return CATEGORIES.includes(value as Category)
@@ -80,6 +81,7 @@ export function createTask(input: NewTask): Task {
     subcategory: input.subcategory,
     createdAt: Date.now(),
     completedAt: null,
+    completionReason: null,
     subtasks: [],
     comments: [],
   }
@@ -103,6 +105,32 @@ export function createComment(text: string): TaskComment {
 
 export function isOverdue(task: Task): boolean {
   return !task.done && task.due !== null && daysFromToday(task.due) < 0
+}
+
+/** Human-readable timing of a completion relative to the task's deadline. */
+export function describeCompletionTiming(
+  due: string | null,
+  completedAt: number | null,
+): string | null {
+  if (!due || !completedAt) return null
+
+  const completionDay = isoDate(new Date(completedAt))
+  const diff = Math.round(
+    (parseISODate(due).getTime() - parseISODate(completionDay).getTime()) / 86_400_000,
+  )
+
+  if (diff > 0) {
+    return diff === 1
+      ? 'Completed 1 day before the deadline.'
+      : `Completed ${diff} days before the deadline.`
+  }
+  if (diff < 0) {
+    const late = Math.abs(diff)
+    return late === 1
+      ? 'Completed 1 day after the deadline.'
+      : `Completed ${late} days after the deadline.`
+  }
+  return 'Completed on the deadline.'
 }
 
 export function getCounts(tasks: Task[]): TaskCounts {

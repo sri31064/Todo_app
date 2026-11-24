@@ -25,6 +25,8 @@ export interface Task {
   subcategory: Subcategory
   createdAt: number
   completedAt: number | null
+  /** Optional note explaining a late or early completion. */
+  completionReason: string | null
   subtasks: Subtask[]
   comments: TaskComment[]
   teamId?: string | null

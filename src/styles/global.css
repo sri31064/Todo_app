@@ -1051,6 +1051,17 @@ select:focus {
   font-weight: 600;
 }
 
+.details-fact-reason {
+  grid-column: 1 / -1;
+}
+
+.details-fact-reason .details-value {
+  padding: 6px 9px;
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 4px;
+}
+
 .details-head {
   display: flex;
   align-items: baseline;
