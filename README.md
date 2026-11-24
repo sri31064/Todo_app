@@ -131,7 +131,8 @@ JSON bodies use `{ "email", "password" }` for auth, `{ "tasks": [...] }` for per
 - Log timestamped **progress notes** on each task, with undo when deleting notes or parts
 - Complete, edit in place (double-click a title), and delete with undo
 - Filter by **All / Pending / Overdue / Completed**, with live counts and instant search
-- Completed tasks keep their full history: deadline, priority, category, sub category, added/completed times, parts, and notes
+- Completing a task asks for an optional **reason for delay or early completion**, shown with the task's details
+- Completed tasks keep their full history: deadline, priority, category, sub category, added/completed times, completion reason, parts, and notes
 - Open any task — including completed ones — to see every detail and keep editing its parts or notes
 - Clear completed tasks in bulk, with undo
 - Light and dark themes with a toggle in the header and on the sign-in screen; your choice is remembered in `localStorage` (`taskspace-theme`), and until you choose, the OS colour scheme is followed

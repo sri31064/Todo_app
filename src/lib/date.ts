@@ -9,8 +9,12 @@ function pad(value: number): string {
   return value < 10 ? `0${value}` : String(value)
 }
 
-export function isoToday(date = new Date()): string {
+export function isoDate(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+export function isoToday(date = new Date()): string {
+  return isoDate(date)
 }
 
 export function parseISODate(value: string): Date {

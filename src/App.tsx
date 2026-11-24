@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AddTaskForm } from './components/AddTaskForm'
 import { AuthLoading, AuthScreen, type AuthMode } from './components/AuthScreen'
+import { CompletionReasonDialog } from './components/CompletionReasonDialog'
 import { EmptyState, type EmptyReason } from './components/EmptyState'
 import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
@@ -101,6 +102,10 @@ export default function App() {
   const [dialog, setDialog] = useState<'create' | 'manage' | null>(null)
   const [dialogBusy, setDialogBusy] = useState(false)
   const [dialogError, setDialogError] = useState<string | null>(null)
+  const [completion, setCompletion] = useState<{
+    id: string
+    team: boolean
+  } | null>(null)
 
   const { toast, show: showToast, hide: hideToast } = useToast()
   const { theme, toggleTheme } = useTheme()
@@ -673,13 +678,16 @@ export default function App() {
   }
 
   function handleToggle(id: string, done: boolean) {
-    setTasks((current) =>
-      current.map((task) =>
-        task.id === id
-          ? { ...task, done, completedAt: done ? Date.now() : null }
-          : task,
-      ),
-    )
+    if (done) {
+      setCompletion({ id, team: false })
+      return
+    }
+    updateTask(id, (task) => ({
+      ...task,
+      done: false,
+      completedAt: null,
+      completionReason: null,
+    }))
   }
 
   function handleRename(id: string, title: string) {
@@ -842,11 +850,39 @@ export default function App() {
   }
 
   function handleTeamToggle(id: string, done: boolean) {
+    if (done) {
+      setCompletion({ id, team: true })
+      return
+    }
     updateTeamTaskLocal(id, (task) => ({
       ...task,
-      done,
-      completedAt: done ? Date.now() : null,
+      done: false,
+      completedAt: null,
+      completionReason: null,
     }))
+  }
+
+  function completeTask(reason: string | null) {
+    if (!completion) return
+    const { id, team } = completion
+    const completedAt = Date.now()
+
+    if (team) {
+      updateTeamTaskLocal(id, (task) => ({
+        ...task,
+        done: true,
+        completedAt,
+        completionReason: reason,
+      }))
+    } else {
+      updateTask(id, (task) => ({
+        ...task,
+        done: true,
+        completedAt,
+        completionReason: reason,
+      }))
+    }
+    setCompletion(null)
   }
 
   function handleTeamRename(id: string, title: string) {
@@ -1240,6 +1276,12 @@ export default function App() {
       : 'Loading team…'
     : `${formatToday()} · ${counts.pending} open`
 
+  const completionTask = completion
+    ? completion.team
+      ? team?.teamTasks.find((task) => task.id === completion.id)
+      : tasks.find((task) => task.id === completion.id)
+    : undefined
+
   return (
     <div className="workspace">
       <Sidebar
@@ -1420,6 +1462,14 @@ export default function App() {
           onRemoveInvite={handleRemoveInvite}
           onRename={handleRenameTeam}
           onDelete={handleDeleteTeam}
+        />
+      )}
+
+      {completion && completionTask && (
+        <CompletionReasonDialog
+          task={completionTask}
+          onSubmit={completeTask}
+          onCancel={() => setCompletion(null)}
         />
       )}
     </div>
